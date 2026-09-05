@@ -5,7 +5,6 @@ const previewImage = document.getElementById("previewImage");
 const scanButton = document.getElementById("scanButton");
 const languageSelect = document.getElementById("languageSelect");
 
-const uploadCard = document.getElementById("uploadCard");
 const loadingCard = document.getElementById("loadingCard");
 const errorCard = document.getElementById("errorCard");
 const errorText = document.getElementById("errorText");
@@ -115,13 +114,18 @@ function resetToUpload() {
   fileInput.value = "";
   previewImage.hidden = true;
   dropzoneEmpty.hidden = false;
+  scanButton.hidden = false;
   scanButton.disabled = true;
   showState("upload");
 }
 
+// The upload card (with the photo preview) stays visible in every state now,
+// so the left column never goes empty after scanning.
 function showState(state) {
-  uploadCard.hidden = state !== "upload";
   loadingCard.hidden = state !== "loading";
   errorCard.hidden = state !== "error";
   resultCard.hidden = state !== "result";
+
+  // Only show the "Scan Leaf" button when we're not already loading/showing a result.
+  scanButton.hidden = (state === "loading" || state === "result");
 }

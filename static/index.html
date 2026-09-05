@@ -13,7 +13,10 @@
 <header class="topbar">
   <div class="brand">
     <span class="brand-mark">🌿</span>
-    <span class="brand-name">CropGuard</span>
+    <div class="brand-text">
+      <span class="brand-name">CropGuard</span>
+      <span class="brand-tagline">AI Crop Disease Detector</span>
+    </div>
   </div>
   <select id="languageSelect" class="lang-select" aria-label="Choose language">
     <option value="en">English</option>
@@ -24,65 +27,69 @@
 
 <main class="app">
 
-  <section class="hero">
-    <h1>Spot crop disease in seconds</h1>
-    <p>Upload a photo of a leaf. Get the diagnosis, how serious it is, and what to do next.</p>
-  </section>
+  <div class="left-col">
+    <section class="hero">
+      <h1>Spot crop disease in seconds</h1>
+      <p>Upload a photo of a leaf. Get the diagnosis, how serious it is, and what to do next.</p>
+    </section>
 
-  <section id="uploadCard" class="upload-card">
-    <input type="file" id="fileInput" accept="image/*" hidden />
-    <div id="dropzone" class="dropzone">
-      <div id="dropzoneEmpty" class="dropzone-empty">
-        <div class="dropzone-icon">📷</div>
-        <p class="dropzone-title">Add a leaf photo</p>
-        <p class="dropzone-sub">Tap to upload, or drag an image here</p>
+    <section id="uploadCard" class="upload-card">
+      <input type="file" id="fileInput" accept="image/*" hidden />
+      <div id="dropzone" class="dropzone">
+        <div id="dropzoneEmpty" class="dropzone-empty">
+          <div class="dropzone-icon">📷</div>
+          <p class="dropzone-title">Add a leaf photo</p>
+          <p class="dropzone-sub">Tap to upload, or drag an image here</p>
+        </div>
+        <img id="previewImage" class="preview-image" alt="Selected leaf" hidden />
       </div>
-      <img id="previewImage" class="preview-image" alt="Selected leaf" hidden />
-    </div>
-    <button id="scanButton" class="btn-primary" disabled>Scan Leaf</button>
-  </section>
+      <button id="scanButton" class="btn-primary" disabled>Scan Leaf</button>
+    </section>
+  </div>
 
-  <section id="loadingCard" class="loading-card" hidden>
-    <div class="spinner"></div>
-    <p>Analyzing leaf…</p>
-  </section>
+  <div class="right-col">
+    <section id="loadingCard" class="loading-card" hidden>
+      <div class="spinner"></div>
+      <p>Analyzing leaf…</p>
+    </section>
 
-  <section id="errorCard" class="error-card" hidden>
-    <p id="errorText">Something went wrong. Please try again.</p>
-    <button id="retryButton" class="btn-secondary">Try Again</button>
-  </section>
+    <section id="errorCard" class="error-card" hidden>
+      <p id="errorText">Something went wrong. Please try again.</p>
+      <button id="retryButton" class="btn-secondary">Try Again</button>
+    </section>
 
-  <section id="resultCard" class="result-card" hidden>
-    <div class="result-header">
-      <h2 id="diseaseName">—</h2>
-      <button id="scanAgainButton" class="btn-text">Scan another</button>
-    </div>
-
-    <div class="badges">
-      <div class="badge">
-        <span class="badge-label">Confidence</span>
-        <span id="confidenceValue" class="badge-value">—</span>
+    <section id="resultCard" class="result-card" hidden>
+      <div class="result-header">
+        <h2 id="diseaseName">—</h2>
+        <button id="scanAgainButton" class="btn-text">Scan another</button>
       </div>
-      <div id="severityBadge" class="badge">
-        <span class="badge-label">Severity</span>
-        <span id="severityValue" class="badge-value">—</span>
-      </div>
-    </div>
 
-    <div class="treatment-card">
-      <div class="treatment-icon">💊</div>
-      <div>
-        <p class="treatment-label">Recommended action</p>
-        <p id="treatmentText">—</p>
+      <div class="badges">
+        <div class="badge">
+          <span class="badge-label">Confidence</span>
+          <span id="confidenceValue" class="badge-value">—</span>
+        </div>
+        <div id="severityBadge" class="badge">
+          <span class="badge-label">Severity</span>
+          <span id="severityValue" class="badge-value">—</span>
+        </div>
       </div>
-    </div>
 
-    <details class="explain-card">
-      <summary>Why this diagnosis?</summary>
-      <p class="explain-note">The highlighted area is what the AI focused on to reach this diagnosis.</p>
-      <img id="heatmapImage" class="heatmap-image" alt="Model attention heatmap" />
-    </details>
-  </section>
+      <div class="treatment-card">
+        <div class="treatment-icon">💊</div>
+        <div>
+          <p class="treatment-label">Recommended action</p>
+          <p id="treatmentText">—</p>
+        </div>
+      </div>
+
+      <details class="explain-card">
+        <summary>Why this diagnosis?</summary>
+        <p class="explain-note">The highlighted area is what the AI focused on to reach this diagnosis.</p>
+        <img id="heatmapImage" class="heatmap-image" alt="Model attention heatmap" />
+      </details>
+    </section>
+  </div>
 
 </main>
 
