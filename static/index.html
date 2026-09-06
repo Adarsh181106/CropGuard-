@@ -25,73 +25,178 @@
   </select>
 </header>
 
-<main class="app">
+<nav class="tabbar">
+  <button class="tab-btn active" data-tab="scan">🔍 Scan</button>
+  <button class="tab-btn" data-tab="fertilizer">🌾 Fertilizer</button>
+  <button class="tab-btn" data-tab="cultivation">📅 Cultivation Tips</button>
+  <button class="tab-btn" data-tab="chat">💬 Ask AI</button>
+</nav>
 
-  <div class="left-col">
-    <section class="hero">
-      <h1>Spot crop disease in seconds</h1>
-      <p>Upload a photo of a leaf. Get the diagnosis, how serious it is, and what to do next.</p>
-    </section>
+<!-- ===================== SCAN TAB ===================== -->
+<div id="scanTab" class="tab-panel active">
+  <main class="app">
 
-    <section id="uploadCard" class="upload-card">
-      <input type="file" id="fileInput" accept="image/*" hidden />
-      <div id="dropzone" class="dropzone">
-        <div id="dropzoneEmpty" class="dropzone-empty">
-          <div class="dropzone-icon">📷</div>
-          <p class="dropzone-title">Add a leaf photo</p>
-          <p class="dropzone-sub">Tap to upload, or drag an image here</p>
+    <div class="left-col">
+      <section class="hero">
+        <h1>Spot crop disease in seconds</h1>
+        <p>Upload a photo of a leaf. Get the diagnosis, how serious it is, and what to do next.</p>
+      </section>
+
+      <section id="uploadCard" class="upload-card">
+        <input type="file" id="fileInput" accept="image/*" hidden />
+        <div id="dropzone" class="dropzone">
+          <div id="dropzoneEmpty" class="dropzone-empty">
+            <div class="dropzone-icon">📷</div>
+            <p class="dropzone-title">Add a leaf photo</p>
+            <p class="dropzone-sub">Tap to upload, or drag an image here</p>
+          </div>
+          <img id="previewImage" class="preview-image" alt="Selected leaf" hidden />
         </div>
-        <img id="previewImage" class="preview-image" alt="Selected leaf" hidden />
-      </div>
-      <button id="scanButton" class="btn-primary" disabled>Scan Leaf</button>
-    </section>
+        <button id="scanButton" class="btn-primary" disabled>Scan Leaf</button>
+      </section>
+    </div>
+
+    <div class="right-col">
+      <section id="loadingCard" class="loading-card" hidden>
+        <div class="spinner"></div>
+        <p>Analyzing leaf…</p>
+      </section>
+
+      <section id="errorCard" class="error-card" hidden>
+        <p id="errorText">Something went wrong. Please try again.</p>
+        <button id="retryButton" class="btn-secondary">Try Again</button>
+      </section>
+
+      <section id="resultCard" class="result-card" hidden>
+        <div class="result-header">
+          <h2 id="diseaseName">—</h2>
+          <button id="scanAgainButton" class="btn-text">Scan another</button>
+        </div>
+
+        <div class="badges">
+          <div class="badge">
+            <span class="badge-label">Confidence</span>
+            <span id="confidenceValue" class="badge-value">—</span>
+          </div>
+          <div id="severityBadge" class="badge">
+            <span class="badge-label">Severity</span>
+            <span id="severityValue" class="badge-value">—</span>
+          </div>
+        </div>
+
+        <div class="treatment-card">
+          <div class="treatment-icon">💊</div>
+          <div>
+            <p class="treatment-label">Recommended action</p>
+            <p id="treatmentText">—</p>
+          </div>
+        </div>
+
+        <details class="explain-card">
+          <summary>Why this diagnosis?</summary>
+          <p class="explain-note">The highlighted area is what the AI focused on to reach this diagnosis.</p>
+          <img id="heatmapImage" class="heatmap-image" alt="Model attention heatmap" />
+        </details>
+      </section>
+    </div>
+
+  </main>
+</div>
+
+<!-- ===================== FERTILIZER TAB ===================== -->
+<div id="fertilizerTab" class="tab-panel">
+  <div class="app">
+
+    <div class="left-col">
+      <section class="hero">
+        <h1>Calculate fertilizer needs</h1>
+        <p>Pick your crop and plot size to get an estimated fertilizer amount. These are general guidelines — get a soil test or ask your local agricultural extension officer for precise dosage.</p>
+      </section>
+
+      <section class="upload-card">
+        <label class="field-label">Crop</label>
+        <select id="cropSelect" class="crop-select">
+          <option value="tomato">Tomato</option>
+          <option value="potato">Potato</option>
+          <option value="corn">Corn / Maize</option>
+          <option value="wheat">Wheat</option>
+          <option value="rice">Rice</option>
+          <option value="grape">Grape</option>
+          <option value="soybean">Soybean</option>
+          <option value="pepper">Pepper / Chilli</option>
+          <option value="strawberry">Strawberry</option>
+          <option value="other">Other / General</option>
+        </select>
+
+        <label class="field-label">Plot size (acres)</label>
+        <div class="stepper">
+          <button id="plotMinus" class="stepper-btn">−</button>
+          <div class="stepper-value"><span id="plotSizeValue">1</span><span class="stepper-unit">Acre</span></div>
+          <button id="plotPlus" class="stepper-btn">+</button>
+        </div>
+
+        <button id="calcFertilizerButton" class="btn-primary">Calculate</button>
+      </section>
+    </div>
+
+    <div class="right-col">
+      <section id="fertilizerResult" class="result-card" hidden>
+        <h2>Estimated fertilizer needed</h2>
+        <div class="fert-grid">
+          <div class="fert-item">
+            <span class="fert-label">Urea</span>
+            <span id="ureaValue" class="fert-value">—</span>
+          </div>
+          <div class="fert-item">
+            <span class="fert-label">DAP</span>
+            <span id="dapValue" class="fert-value">—</span>
+          </div>
+          <div class="fert-item">
+            <span class="fert-label">MOP</span>
+            <span id="mopValue" class="fert-value">—</span>
+          </div>
+        </div>
+        <p class="explain-note">Based on 50kg bags. General guideline only — actual needs vary with soil health and variety.</p>
+      </section>
+    </div>
+
   </div>
+</div>
 
-  <div class="right-col">
-    <section id="loadingCard" class="loading-card" hidden>
-      <div class="spinner"></div>
-      <p>Analyzing leaf…</p>
-    </section>
+<!-- ===================== CULTIVATION TIPS TAB (placeholder) ===================== -->
+<div id="cultivationTab" class="tab-panel">
+  <div class="app">
+    <div class="left-col">
+      <section class="hero">
+        <h1>Cultivation tips for your crop</h1>
+        <p>Pick a crop to see what to do at each stage of its growing cycle.</p>
+      </section>
 
-    <section id="errorCard" class="error-card" hidden>
-      <p id="errorText">Something went wrong. Please try again.</p>
-      <button id="retryButton" class="btn-secondary">Try Again</button>
-    </section>
+      <section class="upload-card">
+        <label class="field-label">Crop</label>
+        <select id="cultivationCropSelect" class="crop-select">
+          <option value="tomato">Tomato</option>
+          <option value="potato">Potato</option>
+          <option value="corn">Corn / Maize</option>
+          <option value="wheat">Wheat</option>
+          <option value="rice">Rice</option>
+        </select>
+      </section>
+    </div>
 
-    <section id="resultCard" class="result-card" hidden>
-      <div class="result-header">
-        <h2 id="diseaseName">—</h2>
-        <button id="scanAgainButton" class="btn-text">Scan another</button>
-      </div>
-
-      <div class="badges">
-        <div class="badge">
-          <span class="badge-label">Confidence</span>
-          <span id="confidenceValue" class="badge-value">—</span>
-        </div>
-        <div id="severityBadge" class="badge">
-          <span class="badge-label">Severity</span>
-          <span id="severityValue" class="badge-value">—</span>
-        </div>
-      </div>
-
-      <div class="treatment-card">
-        <div class="treatment-icon">💊</div>
-        <div>
-          <p class="treatment-label">Recommended action</p>
-          <p id="treatmentText">—</p>
-        </div>
-      </div>
-
-      <details class="explain-card">
-        <summary>Why this diagnosis?</summary>
-        <p class="explain-note">The highlighted area is what the AI focused on to reach this diagnosis.</p>
-        <img id="heatmapImage" class="heatmap-image" alt="Model attention heatmap" />
-      </details>
-    </section>
+    <div class="right-col">
+      <section class="result-card">
+        <h2>Growth timeline</h2>
+        <div id="timelineContainer" class="timeline-container"></div>
+      </section>
+    </div>
   </div>
+</div>
 
-</main>
+<!-- ===================== CHAT TAB (placeholder) ===================== -->
+<div id="chatTab" class="tab-panel">
+  <div class="app"><p>AI chat assistant coming in the next step.</p></div>
+</div>
 
 <script src="/static/script.js"></script>
 </body>

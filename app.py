@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory
 from predict import predict
-from translate import get_localized_result
+from translate import get_localized_result, translate_text
 from PIL import Image
 import numpy as np
 import cv2
@@ -29,7 +29,16 @@ def handle_predict():
     language = request.form.get("language", "en")  # defaults to English if not sent
 
     image = Image.open(image_file.stream)
-    raw_label, confidence_pct, severity_pct, heatmap_np = predict(image)
+    result = predict(image)
+
+    if result is None:
+        message = translate_text(
+            "This doesn't look like a plant leaf. Please upload a clear photo of a leaf.",
+            language
+        )
+        return jsonify({"error": "not_a_leaf", "message": message}), 200
+
+    raw_label, confidence_pct, severity_pct, heatmap_np = result
 
     disease_name, treatment = get_localized_result(raw_label, language)
     heatmap_data_url = encode_image_to_base64(heatmap_np)

@@ -37,7 +37,17 @@ def estimate_severity(image_np):
         return 0.0
     diseased_pixels = leaf_pixels - healthy_pixels
     return round(max(0, (diseased_pixels / leaf_pixels) * 100), 1)
-
+def is_likely_leaf(image_np):
+    """
+    Heuristic, not a trained classifier — narrowed to target actual leaf-green
+    hues and exclude low-saturation neutral tones (skin, beige/tan fabric, walls).
+    Still imperfect by nature of being color-only; a production version would
+    use a dedicated leaf/not-leaf classifier.
+    """
+    hsv = cv2.cvtColor(image_np, cv2.COLOR_RGB2HSV)
+    plant_mask = cv2.inRange(hsv, np.array([30, 45, 20]), np.array([95, 255, 220]))
+    plant_ratio = np.sum(plant_mask > 0) / (image_np.shape[0] * image_np.shape[1])
+    return plant_ratio > 0.12
 def get_gradcam_overlay(image_np, input_tensor, predicted_idx):
     target_layers = [model.features[-1]]
     cam = GradCAM(model=model, target_layers=target_layers)
@@ -54,6 +64,8 @@ def predict(image):
     """
     image = image.convert("RGB")
     image_np = np.array(image)
+    if not is_likely_leaf(image_np):
+        return None
     input_tensor = transform(image).unsqueeze(0)
 
     with torch.no_grad():
